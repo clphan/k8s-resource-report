@@ -20,12 +20,12 @@ type podMetric struct {
 	currentcpu int
 }
 
-type clientConfig struct {
+type ClientConfig struct {
 	clientset     *kubernetes.Clientset
 	clientmetrics *metricsv.Clientset
 }
 
-func getclient() (*kubernetes.Clientset, *metricsv.Clientset) {
+func GetClient() (*kubernetes.Clientset, *metricsv.Clientset) {
 	var kubeconfig *string
 	if home := homedir.HomeDir(); home != "" {
 		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
@@ -42,7 +42,7 @@ func getclient() (*kubernetes.Clientset, *metricsv.Clientset) {
 	return clientset, metricset
 }
 
-func getnamespace(clientset *kubernetes.Clientset, namespaceSeselector string, ignorenamespaces []string) []string {
+func GetNamespace(clientset *kubernetes.Clientset, namespaceSeselector string, ignorenamespaces []string) []string {
 	namespaces, err := clientset.CoreV1().Namespaces().List(context.TODO(), metav1.ListOptions{
 		LabelSelector: namespaceSeselector,
 	})
@@ -65,7 +65,7 @@ func getnamespace(clientset *kubernetes.Clientset, namespaceSeselector string, i
 	return validnamespaces
 }
 
-func getmetric(validnamespaces []string, clientset *kubernetes.Clientset, clientmetrics *metricsv.Clientset) []podMetric {
+func GetMetric(validnamespaces []string, clientset *kubernetes.Clientset, clientmetrics *metricsv.Clientset) []podMetric {
 	var podmetric []podMetric
 	var podindex int = 0
 	for _, namespace := range validnamespaces {

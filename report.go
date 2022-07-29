@@ -15,8 +15,9 @@ type podMetric struct {
 
 func main() {
 	label := os.Args[1]
-	clientset, clientmetrics := getclient()
-	validnamespaces := getnamespace(clientset, label)
+	var ignorenamespaces []string = []string{"abc", "cdb"}
+	clientset, clientmetrics := modules.getclient()
+	validnamespaces := modules.getnamespace(clientset, label, ignorenamespaces)
 	podmetrics := getmetric(validnamespaces, clientset, clientmetrics)
 	fmt.Println("Num object:", len(podmetrics))
 	var csvdata [][]string

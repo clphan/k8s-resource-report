@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func writedata(data [][]string, filename string) bool {
+func WriteData(data [][]string, filename string) bool {
 	csvFile, err := os.Create("report.csv")
 	if err != nil {
 		log.Fatalf("failed creating file: %s", err)
