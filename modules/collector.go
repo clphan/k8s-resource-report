@@ -67,7 +67,6 @@ func GetNamespace(clientset *kubernetes.Clientset, namespaceSeselector string, i
 
 func GetMetric(validnamespaces []string, clientset *kubernetes.Clientset, clientmetrics *metricsv.Clientset) []PodMetric {
 	var podmetric []PodMetric
-	var podindex int = 0
 	for _, namespace := range validnamespaces {
 		pods, err := clientset.CoreV1().Pods(namespace).List(context.TODO(), metav1.ListOptions{})
 		if err != nil {
@@ -89,7 +88,6 @@ func GetMetric(validnamespaces []string, clientset *kubernetes.Clientset, client
 					}
 				}
 				podmetric = append(podmetric, PodMetric{podMetrics.Items[k].Namespace, podMetrics.Items[k].Name, currentcpu, currentmem})
-				podindex++
 				k++
 			}
 			time.Sleep(100 * time.Millisecond)
