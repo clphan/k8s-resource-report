@@ -1,4 +1,4 @@
-module modules
+module github.com/clphan/k8s-resource-report/modules
 
 go 1.18
 
