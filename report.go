@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+
+	"github.com/clphan/k8s-resource-report/modules"
 )
 
 type podMetric struct {
@@ -16,9 +18,9 @@ type podMetric struct {
 func main() {
 	label := os.Args[1]
 	var ignorenamespaces []string = []string{"abc", "cdb"}
-	clientset, clientmetrics := modules.getclient()
-	validnamespaces := modules.getnamespace(clientset, label, ignorenamespaces)
-	podmetrics := getmetric(validnamespaces, clientset, clientmetrics)
+	clientset, clientmetrics := modules.GetClient()
+	validnamespaces := modules.GetNamespace(clientset, label, ignorenamespaces)
+	podmetrics := modules.GetMetric(validnamespaces, clientset, clientmetrics)
 	fmt.Println("Num object:", len(podmetrics))
 	var csvdata [][]string
 	for i := range podmetrics {

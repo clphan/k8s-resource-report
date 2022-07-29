@@ -13,7 +13,7 @@ import (
 	metricsv "k8s.io/metrics/pkg/client/clientset/versioned"
 )
 
-type podMetric struct {
+type PodMetric struct {
 	namespace  string
 	podname    string
 	currentmem int
@@ -65,8 +65,8 @@ func GetNamespace(clientset *kubernetes.Clientset, namespaceSeselector string, i
 	return validnamespaces
 }
 
-func GetMetric(validnamespaces []string, clientset *kubernetes.Clientset, clientmetrics *metricsv.Clientset) []podMetric {
-	var podmetric []podMetric
+func GetMetric(validnamespaces []string, clientset *kubernetes.Clientset, clientmetrics *metricsv.Clientset) []PodMetric {
+	var podmetric []PodMetric
 	var podindex int = 0
 	for _, namespace := range validnamespaces {
 		pods, err := clientset.CoreV1().Pods(namespace).List(context.TODO(), metav1.ListOptions{})
