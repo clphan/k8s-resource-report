@@ -73,8 +73,8 @@ func GetMetric(validnamespaces []string, clientset *kubernetes.Clientset, client
 		if err != nil {
 			panic(err.Error())
 		}
+		var k int = 0
 		for _, v := range pods.Items {
-			var k int = 0
 			if v.Status.Phase == "Running" {
 				podMetrics, err := clientmetrics.MetricsV1beta1().PodMetricses(namespace).List(context.TODO(), metav1.ListOptions{})
 				if err != nil {
