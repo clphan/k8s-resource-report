@@ -73,15 +73,16 @@ func GetMetric(validnamespaces []string, clientset *kubernetes.Clientset, client
 		if err != nil {
 			panic(err.Error())
 		}
-		for i, v := range pods.Items {
+		for _, v := range pods.Items {
+			var k int = 0
 			if v.Status.Phase == "Running" {
-				podmetric[podindex].Namespace = namespace
-				podmetric[podindex].PodName = pods.Items[i].Name
 				podMetrics, err := clientmetrics.MetricsV1beta1().PodMetricses(namespace).List(context.TODO(), metav1.ListOptions{})
 				if err != nil {
 					panic(err.Error())
 				}
-				metrics := podMetrics.Items[i]
+				metrics := podMetrics.Items[k]
+				podmetric[podindex].PodName = podMetrics.Items[k].Name
+				podmetric[podindex].Namespace = podMetrics.Items[k].Namespace
 				for j := range metrics.Containers {
 					if metrics.Containers[j].Name != "envoy" {
 						podmetric[podindex].CurrentCpu = int(metrics.Containers[j].Usage.Cpu().MilliValue())
@@ -89,6 +90,7 @@ func GetMetric(validnamespaces []string, clientset *kubernetes.Clientset, client
 					}
 				}
 				podindex++
+				k++
 			}
 			time.Sleep(100 * time.Millisecond)
 		}
