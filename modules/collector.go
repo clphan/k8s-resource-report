@@ -67,7 +67,6 @@ func GetNamespace(clientset *kubernetes.Clientset, namespaceSeselector string, i
 
 func GetMetric(validnamespaces []string, clientset *kubernetes.Clientset, clientmetrics *metricsv.Clientset) []PodMetric {
 	var podmetric []PodMetric
-	var podindex int = 0
 	for _, namespace := range validnamespaces {
 		pods, err := clientset.CoreV1().Pods(namespace).List(context.TODO(), metav1.ListOptions{})
 		if err != nil {
@@ -75,20 +74,19 @@ func GetMetric(validnamespaces []string, clientset *kubernetes.Clientset, client
 		}
 		for i, v := range pods.Items {
 			if v.Status.Phase == "Running" {
-				podmetric[podindex].Namespace = namespace
-				podmetric[podindex].PodName = pods.Items[i].Name
 				podMetrics, err := clientmetrics.MetricsV1beta1().PodMetricses(namespace).List(context.TODO(), metav1.ListOptions{})
 				if err != nil {
 					panic(err.Error())
 				}
 				metrics := podMetrics.Items[i]
+				var currentcpu, currentmem int
 				for j := range metrics.Containers {
 					if metrics.Containers[j].Name != "envoy" {
-						podmetric[podindex].CurrentCpu = int(metrics.Containers[j].Usage.Cpu().MilliValue())
-						podmetric[podindex].CurrentMem = int(metrics.Containers[j].Usage.Memory().Value() / 1048576)
+						currentcpu = int(metrics.Containers[j].Usage.Cpu().MilliValue())
+						currentmem = int(metrics.Containers[j].Usage.Memory().Value() / 1048576)
 					}
 				}
-				podindex++
+				podmetric = append(podmetric, PodMetric{namespace, pods.Items[i].Name, currentcpu, currentmem})
 			}
 			time.Sleep(100 * time.Millisecond)
 		}
