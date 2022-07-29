@@ -14,10 +14,10 @@ import (
 )
 
 type PodMetric struct {
-	namespace  string
-	podname    string
-	currentmem int
-	currentcpu int
+	Namespace  string
+	PodName    string
+	CurrentMem int
+	CurrentCpu int
 }
 
 type ClientConfig struct {
@@ -75,8 +75,8 @@ func GetMetric(validnamespaces []string, clientset *kubernetes.Clientset, client
 		}
 		for i, v := range pods.Items {
 			if v.Status.Phase == "Running" {
-				podmetric[podindex].namespace = namespace
-				podmetric[podindex].podname = pods.Items[i].Name
+				podmetric[podindex].Namespace = namespace
+				podmetric[podindex].PodName = pods.Items[i].Name
 				podMetrics, err := clientmetrics.MetricsV1beta1().PodMetricses(namespace).List(context.TODO(), metav1.ListOptions{})
 				if err != nil {
 					panic(err.Error())
@@ -84,8 +84,8 @@ func GetMetric(validnamespaces []string, clientset *kubernetes.Clientset, client
 				metrics := podMetrics.Items[i]
 				for j := range metrics.Containers {
 					if metrics.Containers[j].Name != "envoy" {
-						podmetric[podindex].currentcpu = int(metrics.Containers[j].Usage.Cpu().MilliValue())
-						podmetric[podindex].currentmem = int(metrics.Containers[j].Usage.Memory().Value() / 1048576)
+						podmetric[podindex].CurrentCpu = int(metrics.Containers[j].Usage.Cpu().MilliValue())
+						podmetric[podindex].CurrentMem = int(metrics.Containers[j].Usage.Memory().Value() / 1048576)
 					}
 				}
 				podindex++
