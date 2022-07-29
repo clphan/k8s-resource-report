@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"strconv"
 
 	"github.com/clphan/k8s-resource-report/modules"
 )
@@ -22,12 +21,15 @@ func main() {
 	validnamespaces := modules.GetNamespace(clientset, label, ignorenamespaces)
 	podmetrics := modules.GetMetric(validnamespaces, clientset, clientmetrics, 100)
 	fmt.Println("Num object:", len(podmetrics))
-	var csvdata [][]string
 	for i := range podmetrics {
-		csvdata[i][0] = podmetrics[i].Namespace
-		csvdata[i][1] = podmetrics[i].PodName
-		csvdata[i][2] = strconv.Itoa(podmetrics[i].CurrentCpu)
-		csvdata[i][3] = strconv.Itoa(podmetrics[i].CurrentMem)
+		fmt.Println(podmetrics[i])
 	}
-	fmt.Println(csvdata)
+	// var csvdata [][]string
+	// for i := range podmetrics {
+	// 	csvdata[i][0] = podmetrics[i].Namespace
+	// 	csvdata[i][1] = podmetrics[i].PodName
+	// 	csvdata[i][2] = strconv.Itoa(podmetrics[i].CurrentCpu)
+	// 	csvdata[i][3] = strconv.Itoa(podmetrics[i].CurrentMem)
+	// }
+	// fmt.Println(csvdata)
 }
