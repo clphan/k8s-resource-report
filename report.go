@@ -22,9 +22,6 @@ func main() {
 	validnamespaces := modules.GetNamespace(clientset, label, ignorenamespaces)
 	podmetrics := modules.GetMetric(validnamespaces, clientset, clientmetrics, 100)
 	fmt.Println("Num object:", len(podmetrics))
-	for i := range podmetrics {
-		fmt.Println(podmetrics[i])
-	}
 	var csvdata [][]string
 	for i := range podmetrics {
 		csvdata[i][0] = podmetrics[i].Namespace
