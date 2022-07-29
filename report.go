@@ -19,7 +19,7 @@ func main() {
 	var ignorenamespaces []string = []string{"abc", "cdb"}
 	clientset, clientmetrics := modules.GetClient()
 	validnamespaces := modules.GetNamespace(clientset, label, ignorenamespaces)
-	podmetrics := modules.GetMetric(validnamespaces, clientset, clientmetrics)
+	podmetrics := modules.GetMetric(validnamespaces, clientset, clientmetrics, 100)
 	fmt.Println("Num object:", len(podmetrics))
 	for i := range podmetrics {
 		fmt.Println(podmetrics[i])
