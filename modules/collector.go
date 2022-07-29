@@ -81,8 +81,6 @@ func GetMetric(validnamespaces []string, clientset *kubernetes.Clientset, client
 					panic(err.Error())
 				}
 				metrics := podMetrics.Items[k]
-				podmetric[podindex].PodName = podMetrics.Items[k].Name
-				podmetric[podindex].Namespace = podMetrics.Items[k].Namespace
 				var currentcpu, currentmem int
 				for j := range metrics.Containers {
 					if metrics.Containers[j].Name != "envoy" {
