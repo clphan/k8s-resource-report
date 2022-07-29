@@ -13,13 +13,6 @@ type podMetric struct {
 	currentcpu int
 }
 
-var ignorenamespaces []string = []string{
-	"aurora-automations-apps",
-	"card-batchjob-service",
-	"card-sftp-service",
-	"card-mock-service",
-}
-
 func main() {
 	label := os.Args[1]
 	clientset, clientmetrics := getclient()
