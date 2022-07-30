@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"time"
 
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/homedir"
@@ -60,6 +61,29 @@ func GetClient() *kubernetes.Clientset {
 	}
 	clientset, err := kubernetes.NewForConfig(config)
 	return clientset
+}
+
+func GetNamespace(clientset *kubernetes.Clientset, namespaceSeselector string, ignorenamespaces []string) []string {
+	namespaces, err := clientset.CoreV1().Namespaces().List(context.TODO(), v1.ListOptions{
+		LabelSelector: namespaceSeselector,
+	})
+	if err != nil {
+		panic(err.Error())
+	}
+	var validnamespaces []string
+	for index := range namespaces.Items {
+		var flag bool = true
+		namespace := namespaces.Items[index].Name
+		for _, ns := range ignorenamespaces {
+			if ns == namespace {
+				flag = false
+			}
+		}
+		if flag == true {
+			validnamespaces = append(validnamespaces, namespace)
+		}
+	}
+	return validnamespaces
 }
 
 func GetMetricClientApi(clientset *kubernetes.Clientset, pods *PodMetricsList, namespace string) error {

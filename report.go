@@ -15,18 +15,20 @@ type podMetric struct {
 }
 
 func main() {
-	ns := os.Args[1]
-	// var ignorenamespaces []string = []string{"abc", "cdb"}
+	label := os.Args[1]
+	var ignorenamespaces []string = []string{"abc", "cdb"}
 	clientset := modules.GetClient()
 	var pods modules.PodMetricsList
-	err := modules.GetMetricClientApi(clientset, &pods, ns)
-	if err != nil {
-		panic(err.Error())
+	validnamespaces := modules.GetNamespace(clientset, label, ignorenamespaces)
+	for _, v := range validnamespaces {
+		err := modules.GetMetricClientApi(clientset, &pods, v)
+		if err != nil {
+			panic(err.Error())
+		}
+		for _, m := range pods.Items {
+			fmt.Println(m.Metadata.Name, m.Metadata.Namespace, m.Timestamp.String())
+		}
 	}
-	for _, m := range pods.Items {
-		fmt.Println(m.Metadata.Name, m.Metadata.Namespace, m.Timestamp.String())
-	}
-	// validnamespaces := modules.GetNamespace(clientset, label, ignorenamespaces)
 	// podmetrics := modules.GetMetric(validnamespaces, clientset, clientmetrics, 100)
 	// fmt.Println("Num object:", len(podmetrics))
 	// for i := range podmetrics {
