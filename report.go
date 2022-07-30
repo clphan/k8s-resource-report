@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/clphan/k8s-resource-report/modules"
@@ -38,6 +39,7 @@ func main() {
 			podobject = append(podobject, podMetric{v, m.Metadata.Name, containers})
 		}
 	}
+	fmt.Println(podobject)
 	// podmetrics := modules.GetMetric(validnamespaces, clientset, clientmetrics, 100)
 	// fmt.Println("Num object:", len(podmetrics))
 	// for i := range podmetrics {
