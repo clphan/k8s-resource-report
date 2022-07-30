@@ -24,13 +24,11 @@ type PodMetricsList struct {
 	Kind       string `json:"kind"`
 	APIVersion string `json:"apiVersion"`
 	Metadata   struct {
-		SelfLink string `json:"selfLink"`
 	} `json:"metadata"`
 	Items []struct {
 		Metadata struct {
 			Name              string    `json:"name"`
 			Namespace         string    `json:"namespace"`
-			SelfLink          string    `json:"selfLink"`
 			CreationTimestamp time.Time `json:"creationTimestamp"`
 		} `json:"metadata"`
 		Timestamp  time.Time `json:"timestamp"`
@@ -65,12 +63,13 @@ func GetClient() *kubernetes.Clientset {
 	return clientset
 }
 
-func GetMetricClientApi(clientset *kubernetes.Clientset, pods *PodMetricsList) error {
+func GetMetricClientApi(clientset *kubernetes.Clientset, pods *PodMetricsList, namespace) error {
+	var path string = "apis/metrics.k8s.io/v1beta1/namespaces/" + namespace + "pods"
 	data, err := clientset.RESTClient().Get().AbsPath("apis/metrics.k8s.io/v1beta1/namespaces/payment-proxy-management/pods").DoRaw(context.TODO())
 	if err != nil {
 		panic(err.Error())
 	}
-	byteArr, _ := json.Marshal(data)
+	byteArr, _ := json.Unmarshal(data)
 	fmt.Println(string(byteArr))
 	err = json.Unmarshal(data, &pods)
 	return err

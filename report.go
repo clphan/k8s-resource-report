@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/clphan/k8s-resource-report/modules"
 )
@@ -14,11 +15,11 @@ type podMetric struct {
 }
 
 func main() {
-	// label := os.Args[1]
+	namespace := os.Args[1]
 	// var ignorenamespaces []string = []string{"abc", "cdb"}
 	clientset := modules.GetClient()
 	var pods modules.PodMetricsList
-	err := modules.GetMetricClientApi(clientset, &pods)
+	err := modules.GetMetricClientApi(clientset, &pods, namespace)
 	if err != nil {
 		panic(err.Error())
 	}
