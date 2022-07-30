@@ -1,12 +1,8 @@
-module k8s-resource-report
+module github.com/clphan/k8s-resource-report
 
 go 1.18
 
-require (
-	github.com/clphan/k8s-resource-report v0.0.0-20220730030934-f18ebc5a532f
-	k8s.io/client-go v0.24.3
-	k8s.io/metrics v0.24.3
-)
+require k8s.io/client-go v0.24.3
 
 require (
 	github.com/PuerkitoBio/purell v1.1.1 // indirect

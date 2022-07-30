@@ -10,7 +10,6 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/homedir"
-	metricsv "k8s.io/metrics/pkg/client/clientset/versioned"
 )
 
 type PodMetric struct {
@@ -46,11 +45,10 @@ type PodMetricsList struct {
 }
 
 type ClientConfig struct {
-	clientset     *kubernetes.Clientset
-	clientmetrics *metricsv.Clientset
+	clientset *kubernetes.Clientset
 }
 
-func GetClient() (*kubernetes.Clientset, *metricsv.Clientset) {
+func GetClient() *kubernetes.Clientset {
 	var kubeconfig *string
 	if home := homedir.HomeDir(); home != "" {
 		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
@@ -63,14 +61,11 @@ func GetClient() (*kubernetes.Clientset, *metricsv.Clientset) {
 		panic(err.Error())
 	}
 	clientset, err := kubernetes.NewForConfig(config)
-	metricset, err := metricsv.NewForConfig(config)
-	return clientset, metricset
+	return clientset
 }
 
 func GetMetricClientApi(namespace string, podname string, clientset *kubernetes.Clientset) {
 	var pods *PodMetricsList
-	// var apipath string
-	// apipath = "apis/metrics.k8s.io/v1beta1/" + namespace + "pods" + podname
 	data, err := clientset.RESTClient().Get().AbsPath("apis/metrics.k8s.io/v1beta1/pods").DoRaw(context.TODO())
 	if err != nil {
 		panic(err.Error())

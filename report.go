@@ -12,7 +12,7 @@ type podMetric struct {
 func main() {
 	// label := os.Args[1]
 	// var ignorenamespaces []string = []string{"abc", "cdb"}
-	clientset, _ := modules.GetClient()
+	clientset := modules.GetClient()
 	modules.GetMetricClientApi("finexus-gateway", "finexus-gateway-5dc7cbbbd4-d89vb", clientset)
 
 	// validnamespaces := modules.GetNamespace(clientset, label, ignorenamespaces)
