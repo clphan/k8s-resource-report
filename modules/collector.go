@@ -2,8 +2,8 @@ package modules
 
 import (
 	"context"
+	"encoding/json"
 	"flag"
-	"fmt"
 	"path/filepath"
 	"time"
 
@@ -19,6 +19,31 @@ type PodMetric struct {
 	PodName    string
 	CurrentMem int
 	CurrentCpu int
+}
+
+type PodMetricsList struct {
+	Kind       string `json:"kind"`
+	APIVersion string `json:"apiVersion"`
+	Metadata   struct {
+		SelfLink string `json:"selfLink"`
+	} `json:"metadata"`
+	Items []struct {
+		Metadata struct {
+			Name              string    `json:"name"`
+			Namespace         string    `json:"namespace"`
+			SelfLink          string    `json:"selfLink"`
+			CreationTimestamp time.Time `json:"creationTimestamp"`
+		} `json:"metadata"`
+		Timestamp  time.Time `json:"timestamp"`
+		Window     string    `json:"window"`
+		Containers []struct {
+			Name  string `json:"name"`
+			Usage struct {
+				CPU    string `json:"cpu"`
+				Memory string `json:"memory"`
+			} `json:"usage"`
+		} `json:"containers"`
+	} `json:"items"`
 }
 
 type ClientConfig struct {
@@ -67,13 +92,14 @@ func GetNamespace(clientset *kubernetes.Clientset, namespaceSeselector string, i
 }
 
 func GetMetricApi(namespace string, podname string, clientset *kubernetes.Clientset) {
+	var pods *PodMetricsList
 	// var apipath string
 	// apipath = "apis/metrics.k8s.io/v1beta1/" + namespace + "pods" + podname
 	data, err := clientset.RESTClient().Get().AbsPath("apis/metrics.k8s.io/v1beta1/pods").DoRaw(context.TODO())
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Println(data)
+	err = json.Unmarshal(data, &pods)
 	// rs := json.Unmarshal()
 }
 
