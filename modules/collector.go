@@ -64,12 +64,11 @@ func GetClient() *kubernetes.Clientset {
 	return clientset
 }
 
-func GetMetricClientApi(namespace string, podname string, clientset *kubernetes.Clientset) {
-	var pods *PodMetricsList
+func GetMetricClientApi(clientset *kubernetes.Clientset, pods *PodMetricsList) error {
 	data, err := clientset.RESTClient().Get().AbsPath("apis/metrics.k8s.io/v1beta1/pods").DoRaw(context.TODO())
 	if err != nil {
 		panic(err.Error())
 	}
 	err = json.Unmarshal(data, &pods)
-	print(pods)
+	return err
 }

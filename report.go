@@ -1,6 +1,10 @@
 package main
 
-import "github.com/clphan/k8s-resource-report/modules"
+import (
+	"fmt"
+
+	"github.com/clphan/k8s-resource-report/modules"
+)
 
 type podMetric struct {
 	namespace  string
@@ -13,8 +17,14 @@ func main() {
 	// label := os.Args[1]
 	// var ignorenamespaces []string = []string{"abc", "cdb"}
 	clientset := modules.GetClient()
-	modules.GetMetricClientApi("finexus-gateway", "finexus-gateway-5dc7cbbbd4-d89vb", clientset)
-
+	var pods modules.PodMetricsList
+	err := modules.GetMetricClientApi(clientset, &pods)
+	if err != nil {
+		panic(err.Error())
+	}
+	for _, m := range pods.Items {
+		fmt.Println(m.Metadata.Name, m.Metadata.Namespace, m.Timestamp.String())
+	}
 	// validnamespaces := modules.GetNamespace(clientset, label, ignorenamespaces)
 	// podmetrics := modules.GetMetric(validnamespaces, clientset, clientmetrics, 100)
 	// fmt.Println("Num object:", len(podmetrics))
