@@ -3,6 +3,7 @@ package modules
 import (
 	"context"
 	"flag"
+	"fmt"
 	"path/filepath"
 	"time"
 
@@ -63,6 +64,18 @@ func GetNamespace(clientset *kubernetes.Clientset, namespaceSeselector string, i
 		}
 	}
 	return validnamespaces
+}
+
+func GetMetricApi(namespace string, podname string, clientset *kubernetes.Clientset) []byte {
+	var apipath string
+	apipath = "apis/metrics.k8s.io/v1beta1/" + namespace + "pods" + podname
+	data, err := clientset.RESTClient().Get().AbsPath(apipath).DoRaw(context.TODO())
+	if err != nil {
+		panic(err.Error())
+	}
+	fmt.Println(data)
+	// rs := json.Unmarshal()
+	return data
 }
 
 func GetMetric(validnamespaces []string, clientset *kubernetes.Clientset, clientmetrics *metricsv.Clientset, timeInterval time.Duration) []PodMetric {
