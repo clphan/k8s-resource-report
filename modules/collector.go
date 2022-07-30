@@ -71,5 +71,5 @@ func GetMetricClientApi(namespace string, podname string, clientset *kubernetes.
 		panic(err.Error())
 	}
 	err = json.Unmarshal(data, &pods)
-	print(err)
+	print(pods)
 }
