@@ -1,9 +1,9 @@
-module github.com/clphan/k8s-resource-report
+module k8s-resource-report
 
 go 1.18
 
 require (
-	k8s.io/apimachinery v0.24.3
+	github.com/clphan/k8s-resource-report v0.0.0-20220730030934-f18ebc5a532f
 	k8s.io/client-go v0.24.3
 	k8s.io/metrics v0.24.3
 )
@@ -41,6 +41,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 	k8s.io/api v0.24.3 // indirect
+	k8s.io/apimachinery v0.24.3 // indirect
 	k8s.io/klog/v2 v2.60.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20220328201542-3ee0da9b0b42 // indirect
 	k8s.io/utils v0.0.0-20220210201930-3a6ce19ff2f9 // indirect
