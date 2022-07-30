@@ -15,11 +15,11 @@ type podMetric struct {
 }
 
 func main() {
-	namespace := os.Args[1]
+	ns := os.Args[1]
 	// var ignorenamespaces []string = []string{"abc", "cdb"}
 	clientset := modules.GetClient()
 	var pods modules.PodMetricsList
-	err := modules.GetMetricClientApi(clientset, &pods, namespace)
+	err := modules.GetMetricClientApi(clientset, &pods, ns)
 	if err != nil {
 		panic(err.Error())
 	}
