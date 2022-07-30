@@ -1,17 +1,20 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/clphan/k8s-resource-report/modules"
 )
 
+type Containers struct {
+	name       string
+	currentmem string
+	currentcpu string
+}
 type podMetric struct {
 	namespace  string
 	podname    string
-	currentmem int
-	currentcpu int
+	containers []Containers
 }
 
 func main() {
@@ -20,13 +23,19 @@ func main() {
 	clientset := modules.GetClient()
 	var pods modules.PodMetricsList
 	validnamespaces := modules.GetNamespace(clientset, label, ignorenamespaces)
+	var podobject []podMetric
 	for _, v := range validnamespaces {
 		err := modules.GetMetricClientApi(clientset, &pods, v)
 		if err != nil {
 			panic(err.Error())
 		}
+
 		for _, m := range pods.Items {
-			fmt.Println(m.Metadata.Name, m.Metadata.Namespace, m.Timestamp.String())
+			var containers []Containers
+			for _, n := range m.Containers {
+				containers = append(containers, Containers{n.Name, n.Usage.CPU, n.Usage.Memory})
+			}
+			podobject = append(podobject, podMetric{v, m.Metadata.Name, containers})
 		}
 	}
 	// podmetrics := modules.GetMetric(validnamespaces, clientset, clientmetrics, 100)
