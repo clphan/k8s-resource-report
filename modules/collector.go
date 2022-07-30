@@ -70,7 +70,8 @@ func GetMetricClientApi(clientset *kubernetes.Clientset, pods *PodMetricsList) e
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Println(json.Marshal(data))
+	byteArr, _ := json.Marshal(data)
+	fmt.Println(string(byteArr))
 	err = json.Unmarshal(data, &pods)
 	return err
 }
