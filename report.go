@@ -15,7 +15,7 @@ func main() {
 	// label := os.Args[1]
 	// var ignorenamespaces []string = []string{"abc", "cdb"}
 	clientset, _ := modules.GetClient()
-	modules.GetMetricApi("finexus-gateway", "finexus-gateway-5dc7cbbbd4-hw8sm", clientset)
+	modules.GetMetricClientApi("finexus-gateway", "finexus-gateway-5dc7cbbbd4-hw8sm", clientset)
 	// validnamespaces := modules.GetNamespace(clientset, label, ignorenamespaces)
 	// podmetrics := modules.GetMetric(validnamespaces, clientset, clientmetrics, 100)
 	// fmt.Println("Num object:", len(podmetrics))

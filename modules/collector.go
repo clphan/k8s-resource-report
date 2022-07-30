@@ -91,7 +91,7 @@ func GetClient() (*kubernetes.Clientset, *metricsv.Clientset) {
 // 	return validnamespaces
 // }
 
-func GetMetricApi(namespace string, podname string, clientset *kubernetes.Clientset) {
+func GetMetricClientApi(namespace string, podname string, clientset *kubernetes.Clientset) {
 	var pods *PodMetricsList
 	// var apipath string
 	// apipath = "apis/metrics.k8s.io/v1beta1/" + namespace + "pods" + podname
