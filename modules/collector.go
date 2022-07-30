@@ -65,7 +65,7 @@ func GetClient() *kubernetes.Clientset {
 }
 
 func GetMetricClientApi(clientset *kubernetes.Clientset, pods *PodMetricsList) error {
-	data, err := clientset.RESTClient().Get().AbsPath("apis/metrics.k8s.io/v1beta1/pods").DoRaw(context.TODO())
+	data, err := clientset.RESTClient().Get().AbsPath("apis/metrics.k8s.io/v1beta1/namespaces/payment-proxy-management/pods").DoRaw(context.TODO())
 	if err != nil {
 		panic(err.Error())
 	}
