@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"flag"
-	"fmt"
 	"path/filepath"
 	"time"
 
@@ -63,14 +62,12 @@ func GetClient() *kubernetes.Clientset {
 	return clientset
 }
 
-func GetMetricClientApi(clientset *kubernetes.Clientset, pods *PodMetricsList, namespace) error {
-	var path string = "apis/metrics.k8s.io/v1beta1/namespaces/" + namespace + "pods"
-	data, err := clientset.RESTClient().Get().AbsPath("apis/metrics.k8s.io/v1beta1/namespaces/payment-proxy-management/pods").DoRaw(context.TODO())
+func GetMetricClientApi(clientset *kubernetes.Clientset, pods *PodMetricsList, namespace string) error {
+	var path string = "apis/metrics.k8s.io/v1beta1/namespaces/" + namespace + "/pods"
+	data, err := clientset.RESTClient().Get().AbsPath(path).DoRaw(context.TODO())
 	if err != nil {
 		panic(err.Error())
 	}
-	byteArr, _ := json.Unmarshal(data)
-	fmt.Println(string(byteArr))
 	err = json.Unmarshal(data, &pods)
 	return err
 }
