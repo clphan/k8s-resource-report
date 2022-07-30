@@ -1,6 +1,6 @@
 package main
 
-import "k8s-resource-report/modules"
+import "github.com/clphan/k8s-resource-report/modules"
 
 type podMetric struct {
 	namespace  string
