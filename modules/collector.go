@@ -67,9 +67,9 @@ func GetNamespace(clientset *kubernetes.Clientset, namespaceSeselector string, i
 }
 
 func GetMetricApi(namespace string, podname string, clientset *kubernetes.Clientset) []byte {
-	var apipath string
-	apipath = "apis/metrics.k8s.io/v1beta1/" + namespace + "pods" + podname
-	data, err := clientset.RESTClient().Get().AbsPath(apipath).DoRaw(context.TODO())
+	// var apipath string
+	// apipath = "apis/metrics.k8s.io/v1beta1/" + namespace + "pods" + podname
+	data, err := clientset.RESTClient().Get().AbsPath("apis/metrics.k8s.io/v1beta1/pods").DoRaw(context.TODO())
 	if err != nil {
 		panic(err.Error())
 	}
