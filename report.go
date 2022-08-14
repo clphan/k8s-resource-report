@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/clphan/k8s-resource-report/modules"
 )
@@ -20,7 +21,7 @@ type podMetric struct {
 
 func main() {
 	label := os.Args[1]
-	var ignorenamespaces []string = []string{"abc", "cdb"}
+	var ignorenamespaces []string = []string{""}
 	clientset := modules.GetClient()
 	var pods modules.PodMetricsList
 	validnamespaces := modules.GetNamespace(clientset, label, ignorenamespaces)
@@ -39,15 +40,9 @@ func main() {
 			podobject = append(podobject, podMetric{v, m.Metadata.Name, containers})
 		}
 	}
-	fmt.Println(podobject)
-	// podmetrics := modules.GetMetric(validnamespaces, clientset, clientmetrics, 100)
-	// fmt.Println("Num object:", len(podmetrics))
-	// for i := range podmetrics {
-	// 	fmt.Println(podmetrics[i])
-	// }
-	// var csvdata [][]string
-	// for i := range podmetrics {
-	// 	csvdata = append(csvdata, []string{podmetrics[i].Namespace, podmetrics[i].PodName, strconv.Itoa(podmetrics[i].CurrentCpu), strconv.Itoa(podmetrics[i].CurrentMem)})
-	// }
-	// fmt.Println(csvdata)
+	var csvdata [][]string
+	for i := range podobject {
+		csvdata = append(csvdata, []string{podobject[i].Namespace, podobject[i].PodName, strconv.Itoa(podobject[i].CurrentCpu), podobject[i].CurrentMem)})
+	}
+	fmt.Println(csvdata)
 }
